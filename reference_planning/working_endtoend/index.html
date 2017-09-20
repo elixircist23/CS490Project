@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Login</title>
+
+		<script>
+			function load(){
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){
+						var response = JSON.parse(this.responseText);
+						document.getElementById("message").innerHTML = response["answer"];
+					}
+				};
+				xhttp.open("GET", "front.php?user=ali&pass=mypw", true);
+				xhttp.send();
+			}
+		</script>
+
+	</head>
+
+	<body>
+		<input type="text" name="username"><br>
+		<input type="text" name="password"><br>
+		<input type="submit" onclick="load()">
+		<p id="message"></p>
+	</body>
+
+</html>
+
