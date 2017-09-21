@@ -29,29 +29,24 @@
         $result = curl_exec($curl);
         curl_close($curl);
         $obj = json_decode($result);
+        $ans1 = $obj->{"answer_db"};
 
-        // set output if true
-        if (strpos($obj, 'true') !== false){
-        $ans1 = "true";
-        }
-
-        // read results from curl from njit
-                $result2 = curl_exec($curl2);
-        curl_close($curl2);   
-
+         // read results from curl from njit
+        $result2 = curl_exec($curl2);
+        curl_close($curl2);  
+        
         // set output if true
         if (strpos($result2, 'Successful') !== false){
         $ans2 = "true";
         }
-
-        // send results to frontend
         
+        // send results to frontend
         $answers = array();
         $answers[] = array(
         'answer_db' => $ans1,
         'answer_njit' => $ans2
         );
         
-        $json = json_encode($answers);   
+        $json = json_encode($answers);
         echo $json;
 ?>
