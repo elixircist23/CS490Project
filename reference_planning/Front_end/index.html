@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+<style>
+  form {
+    border: 3px solid #f1f1f1;
+    
+  }
+  #username,
+  #password {
+    width: 70%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: rgba(44, 62, 80,1.0);
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 50%;
+  }
+  label {
+    margin-right: 15px;
+  }
+  
+  button{
+       transition: all linear .1s;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+   
+  }
+  .container {
+    padding: 16px;
+    text-align: center;
+  }
+  span.psw {
+    float: right;
+    padding-top: 16px;
+  }
+  #submit {
+    line-height: 15px;
+  }
+  
+  /* Change styles for span and cancel button on extra small screens */
+  @media screen and (max-width: 300px) {
+    span.psw {
+      display: block;
+      float: none;
+    }
+    .cancelbtn {
+      width: 100%;
+    }
+  }
+</style>
+
+<body>
+
+  <h1 style="text-align:center; margin-top: 5%; margin-bottom: 25px; font-size: 50px;">Login Form</h1>
+
+  <form name="myForm">
+
+    <div class="container">
+      <div>
+        <label><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" id=username >
+      </div>
+      <div>
+        <label><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" id=password>
+      </div>
+      <div style="width: 80%; text-align:left; margin-left: 11%; line-height: 30px;">
+        <p> <span id="message1" style="margin-right:20px"></span>
+                   <span id="message2"></span></p>
+      </div>
+      <button type=button id=submit  onclick="sendfrontendphp()">Login</button>
+      <script>
+        function sendfrontendphp() {
+          var username = document.getElementById("username").value;
+          var password = document.getElementById("password").value;
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var response = JSON.parse(this.responseText);
+          
+               
+              if (response[0]["answer_db"] == "true"){
+                 document.getElementById("message1").innerHTML =  "*" + " Database login: " + "Success";
+                 document.getElementById("message1").style.color = "green";  
+              }
+              else{
+                document.getElementById("message1").innerHTML =  "*" + " Database login: " + "Fail";
+                document.getElementById("message1").style.color = "red";
+              }
+              
+              if (response[0]["answer_njit"] == "true"){
+                document.getElementById("message2").innerHTML =  " NJIT login: " + "Success";
+                document.getElementById("message2").style.color = "green";
+              }
+              else{
+                document.getElementById("message2").innerHTML =  " NJIT login: " + "Fail";
+                document.getElementById("message2").style.color = "red";
+              }
+              
+            }
+          };
+          xhttp.open("POST", "front.php?user="+ username + "&" + "pass=" + password, true);
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.send();
+        }
+      </script>
+    </div>
+  </form>
+
+</body>
+</html>
