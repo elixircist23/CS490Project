@@ -1,0 +1,67 @@
+--------Front--------
+
+
+*Student
+-Display all exams
+	/getAllExams.php (to middle) (display exams)
+	-view score
+		/getGrade.php (userid,examid)
+-select test
+	/getExamQuestions.php (input = examName) (to middle) (display test questions)
+-take test
+	-answer question(html form)
+-submit test
+	/submitTest.php (to middle) (input = questionId, answer)
+
+
+*Faculty
+-add new test question to bank
+	/addQuestion.php input (name/title, questionText, test cases)(display if added)
+-create test from question bank
+	/getAllQuestions.php (display all questions)
+	selectQuestions (checkboxes)
+		/createExam.php (questionIds, examName)
+-grade exams
+	/getAllExams.php (to middle) (display exams)
+	button (grade) for each exam
+		/gradeExam.php (examid) (display if exam graded)
+
+
+
+
+--------middle--------
+-login (username password)
+-student
+	/getAllExams.php (to backend) (return to front with result)
+	/getExamQuestions.php (input = examName) (to backend) (return to front with result)
+	/submitTest.php (input = JSON Array of (questionId, answer)) 
+		
+	/getGrade.php (userid,examid)
+		check if release grades
+
+-faculty 
+	/gradeTests.php (examId) (return true/false)
+		/getTestCases.php (to back) (input = questionId) return ( JSON array testCases)
+			php_exec (with testcase inputs (from JSON ARRAY)) check answer 
+				/storeGrade.php (JSON Array (testcase1:true)(grade:50)(userid:abc123)
+	/addQuestion.php input (to backend) (name/title, questionText, test cases)
+	/getAllQuestions.php (to backend)
+	/createExam.php (to backend) (questionIds, examName)
+	/getAllExams.php (to backend) (display exams)
+
+
+
+--------back--------
+
+/getAllExams.php (return all exams in JSON array, ifGraded (true/false))
+/getExamQuestions.php ( input= examName) (return all exam questions in JSON array)
+/getTestCases.php (input = questionId) (return all test cases for question) 
+/storeGrade.php (JSON Array (testcase1:true)(grade:50))
+/getGrade.php (userid,examid)
+/addQuestion.php input (name/title, questionText, test cases) (return true/false)
+/getAllQuestions.php (return all questions)
+/createExam.php (questionIds, examName)
+
+
+
+
