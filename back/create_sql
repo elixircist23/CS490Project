@@ -1,0 +1,13 @@
+create table Results (username varchar(64), test_case_id int, answer_id int, test_case_result varchar(8), PRIMARY KEY(username, test_case_id), FOREIGN KEY(username) REFERENCES Users(username), FOREIGN KEY(test_case_id) REFERENCES TestCases(test_case_id), FOREIGN KEY(answer_id) REFERENCES UserAnswers(answer_id));
+
+create table UserGrades (username varchar(64) NOT NULL, exam_id int, grade float, PRIMARY KEY(username), FOREIGN KEY(username) REFERENCES Users(username));
+
+create table UserAnswers (answer_id int NOT NULL AUTO_INCREMENT, exam_id int, question_id int, username varchar(64), answer_body varchar(512), PRIMARY KEY(answer_id), FOREIGN KEY(exam_id) REFERENCES Exams(exam_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id), FOREIGN KEY(username) REFERENCES Users(username));
+
+create table TestCases (test_case_id int NOT NULL AUTO_INCREMENT, question_id int, test_case varchar(128), test_case_answer varchar(256), PRIMARY KEY(test_case_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id));
+
+create table Users (username varchar(64) NOT NULL, password varchar(64) NOT NULL, type varchar(16) NOT NULL, PRIMARY KEY(username));
+
+create table Exams (exam_id int NOT NULL AUTO_INCREMENT, question_id int, exam_name varchar(64), PRIMARY KEY(exam_id, question_id), FOREIGN KEY(question_id) REFERENCES Questions(question_id));
+
+create table Questions (question_id int NOT NULL AUTO_INCREMENT, question_body varchar(1024), question_weight int, PRIMARY KEY(question_id));
