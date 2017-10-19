@@ -6,10 +6,10 @@ returns:		exam_id, exam_name
 -----------------------------------------------------------------------------------------------
 
 Scenario: 		Student clicks on an exam. Need to show all questions pertaining to the exam.
-How to do it:	An exam will have an associated exam_id. When the exam is clicked, send the
-				exam_id to getExamById.php. On the front end, display all questions.
+How to do it:		An exam will have an associated exam_id. When the exam is clicked, send the
+				exam_id to getExamQuestionBodiesById.php. On the front end, display all questions.
 endpoint:		getExamById.php
-URL parameters:	id = <exam_id>
+URL parameters:		id = <exam_id>
 returns:		exam_id, question_id, username, answer_body
 
 -----------------------------------------------------------------------------------------------
@@ -17,9 +17,9 @@ returns:		exam_id, question_id, username, answer_body
 Scenario:		Student answers questions in an exam, finishes, and submits.
 				So far a we have exam_id, question_id, username, and answer_body.
 				We need to store the students answer into the database.
-How to do it:	Use endpoint storeUserAnswer.php and POST request with JSON body
+How to do it:		Use endpoint storeUserAnswer.php and POST request with JSON body
 				(Be sure to send the post to and https URL and not http)
-POST body:		{
+POST body:			{
 					"exam_id":"<exam_id>", 
 					"question_id":"<question_id>", 
 					"username":"<username>",
