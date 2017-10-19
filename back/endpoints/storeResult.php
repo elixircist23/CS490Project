@@ -6,7 +6,8 @@
         $question_id = $body['question_id'];
         $answer_id = $body['answer_id'];
         $test_case_result = $body['test_case_result'];
-        
+ 	$exam_id = $body['exam_id'];
+
         $link = mysql_connect('sql.njit.edu', 'as2487', 'QOdKwfpVY');
 
         if($link == false){
