@@ -10,9 +10,10 @@
   $data = array(
     'exam_id'  => $arrayJSON[Exam_Id],
     'question_id' => $arrayJSON[question_id],
-    'question_body' => $arrayJSON[question_body],
-    'username' => 'ali'
+    'answer_body' => $arrayJSON[question_body],
+    'username' => $_SESSION["username"]
 );
+
 
   //API Url
   $url = 'https://web.njit.edu/~as2487/cs490/beta/storeUserAnswer.php';
