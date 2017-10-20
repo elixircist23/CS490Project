@@ -1,0 +1,109 @@
+Scenario: 		Student logs in. Need to show all available exams to take.
+How to do it: 	call getExams.php 
+endpoint:		getExams.php
+returns:		exam_id, exam_name
+
+-----------------------------------------------------------------------------------------------
+
+Scenario: 		Student clicks on an exam. Need to show all questions pertaining to the exam.
+How to do it:		An exam will have an associated exam_id. When the exam is clicked, send the
+				exam_id to getExamQuestionBodiesById.php. On the front end, display all questions.
+endpoint:		getExamById.php
+URL parameters:		id = <exam_id>
+returns:		exam_id, question_id, username, answer_body
+
+-----------------------------------------------------------------------------------------------
+
+Scenario:		Student answers questions in an exam, finishes, and submits.
+				So far a we have exam_id, question_id, username, and answer_body.
+				We need to store the students answer into the database.
+How to do it:		Use endpoint storeUserAnswer.php and POST request with JSON body
+				(Be sure to send the post to and https URL and not http)
+POST body:			{
+					"exam_id":"<exam_id>", 
+					"question_id":"<question_id>", 
+					"username":"<username>",
+					"answer_body":"<answer_body>"
+				}
+endpoint:		storeUserAnswer.php
+
+-----------------------------------------------------------------------------------------------
+
+Scenario:		Student logs in and views exams, And wants to view the grade.
+				First we have to check if the student has taken the exam.
+				Then we have to check if the student's exam has been graded yet.
+How to do it:	Send a get request to getDidUserTakeExam.php
+				This will return you json {"taken":"true"} or {"taken":"false"}
+				If it's true you can call getWasUserExamGraded.php
+				This will return you json {"graded":"true"} or {"graded":"false"}
+URL parameters:	id=<exam_id>, username=<username>
+endpoints:		getDidUserTakeExam.php, getWasUserExamGraded.php
+
+-----------------------------------------------------------------------------------------------
+
+Scenario:		Instructor wants to create a new exam
+				First we need to show to instructor all the questions from the bank
+				Call getQuestions.php. returns json question_id, question_body, question_weight
+				Now we have to add each question that gets checked off into a new exam
+				On the check off form there will be an exam_name input
+				To add the new exam, call createExam.php with 1 question
+				This endpoint will return an exam_id
+				use this exam_id to call createExam.php with the exam_id you just got
+How to do it:	createExam.php POST {"question_id":<>, "exam_name":<>}
+					RETURNS exam_id
+				for the rest of the questions:
+				createExam.php POST {"exam_id":<>,"question_id":<>,"exam_name":<>}
+enpoint: 		createExam.php
+POST body:		{
+					<"exam_id":1>
+					"question_id":1
+					"exam_name":"Exam 3"
+				}
+
+-----------------------------------------------------------------------------------------------
+
+Scenario:		Instructor wants to add a new question to the bank
+				POST to createQuestion.php
+POST body:		{
+					"question_body":<question_body>,
+					"question_weight":<question_weight>
+				}
+endpoint:		createQuestion.php
+
+-----------------------------------------------------------------------------------------------
+
+Scenario:		The Instructor wants to grade all students who took an exam
+				hit 'grade' button and send an exam_id to middle
+				middle calls getUserAnswersById.php with parameter id = <exam_id>
+				this will return a json array that consists of:
+				<answer_id, exam_id, question_id, username, answer_body>
+				loop on this array and for each answer do the following:
+				middle will get the test cases for this question using the question_id given
+				getTestCasesByQuestionId.php will return a json array
+				the json consists of: test_case_id, question_id, test_case, and test_case_answer
+				middle will then run the test_case against the user's answer_body
+				and figure out if the test case passed or failed.
+				Then middle will POST to storeResult.php. send json:
+				{
+					"username":<username>,
+					"test_case_id":<test_case_id>,
+					"question_id":<question_id>,
+					"answer_id":<answer_id>,
+					"test_case_result":<test_case_result>,
+					"exam_id":<exam_id>
+				}
+				After this loop is finished all the results are stored in the database
+				call getResultsByExamId.php with url parameter id=<exam_id>
+				this will return you 
+
+
+
+
+
+
+
+
+
+
+
+
