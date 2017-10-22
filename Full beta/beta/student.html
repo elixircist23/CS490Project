@@ -1,0 +1,347 @@
+
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Student Login</title>
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    body {
+      background-color: #e9ebee;
+      font-family: sans-serif;
+    }
+
+    #logoutPannel {
+      background-color: rgba(44, 62, 80, 1.0);
+    }
+
+    #logoutPannel input {
+      background-color: #1ABC9C;
+      color: white;
+      padding: 18px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+    }
+
+    #logoutPannel input:hover {
+      cursor: pointer;
+    }
+
+    #exam {
+      padding: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 12px 20px;
+      margin: 10px 0px;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+      resize: none;
+    }
+
+
+    .submitbutton {
+      padding: 10px 40px;
+      margin-top: 5px;
+      border: 3px solid black;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: all .2s linear;
+    }
+
+    .submitbutton:hover {
+      color: white;
+      background-color: #282830;
+      cursor: pointer;
+    }
+
+    #exam {
+      text-align: center;
+    }
+
+    #exam h3 {
+      font-weight: normal;
+      font-size: 15px;
+    }
+
+    #responstable {
+      text-transform: capitalize;
+      padding: 5px;
+      border-spacing: 10px;
+      margin: 3em auto;
+      width: 80%;
+      overflow: hidden;
+      background: #FFF;
+      color: #024457;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      border-radius: 1.5px;
+    }
+
+    #responstable tr:nth-child(odd) {
+      background-color: #EAF3F3;
+    }
+
+    #responstable th {
+      display: none;
+      background-color: #7D1424;
+      color: #FFF;
+      padding: 1em;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+
+    #responstable th:first-child {
+      display: table-cell;
+      text-align: center;
+    }
+
+    #responstable th:nth-child(2) {
+      display: table-cell;
+    }
+
+    #responstable th:nth-child(2) span {
+      display: none;
+    }
+
+    #responstable th:nth-child(2):after {
+      content: attr(data-th);
+    }
+
+    #responstable td {
+      display: block;
+      word-wrap: break-word;
+      max-width: 7em;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+
+
+    #responstable th,
+    #responstable td {
+      text-align: center;
+      margin: .5em 1em;
+    }
+
+    @media (min-width: 480px) {
+      #responstable th,
+      #responstable td {
+        display: table-cell;
+        padding: 1em;
+      }
+    }
+  </style>
+</head>
+
+<body onload="sendtoexam()">
+
+  <!-- TODO:
+
+              display exams: done
+              click on the exams and displayquestions: done
+              take exams
+
+ -->
+  <!-- NOTE:        LogOut Button  -->
+  <div id=logoutPannel>
+    <form align="right" name="logout" method="post" action="Login.html">
+      <label class="logoutButton">
+          <input name="submit" type="submit" id="submit" value="Log Out">
+      </label>
+    </form>
+  </div>
+
+  <!-- NOTE:          this is where the exams will be displayed -->
+  <div id="selection">
+    <form>
+      <table id="responstable">
+      </table>
+    </form>
+  </div>
+
+  <!-- NOTE:          Exam questions will be displayed here -->
+  <div id="examstarts">
+    <h1 id=examheading style="text-align:center; padding: 50px;"></h1>
+    <form id="exam"></form>
+  </div>
+</body>
+
+
+<script>
+  // NOTE:  this function will get the exams and will display names in table
+
+  var Exam_Id = 0;
+  var question_ids = new Array();
+
+  function sendtoexam() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        displaytable(response);
+      }
+    };
+    xhttp.open("GET", "requestExam.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
+  }
+
+  // NOTE: this function will display table with exam names
+  function displaytable(response) {
+
+    //	Variable to check the length of the JSON abject
+    var lengthOfJSON = Object.keys(response).length;
+    var tableOutputString = "";
+    var header = ["Index", "Exam ID", "Exam", "Grade"];
+    var Exam_id = "";
+
+    //	Generating the column names and storing in the string.
+    tableOutputString = tableOutputString + '<thead> <tr>';
+
+    for (var index = 0; index < header.length; index++) {
+      //console.log(' name=' + key + ' value=' + response[1][key]);
+      tableOutputString = tableOutputString + '<th style = "text-align: center">' + header[index] + '</th>';
+    }
+
+    tableOutputString = tableOutputString + '</tr> </thead>';
+    tableOutputString = tableOutputString + '<tbody>';
+    //	creating the body part of the table
+
+    for (var i = 0; i < lengthOfJSON; i++) {
+      tableOutputString = tableOutputString + '<tr>';
+      tableOutputString = tableOutputString + '<td>' + (i + 1) + '</td>';
+
+      for (var key in response[i]) {
+        if (key == "exam_name") {
+          Exam_id = response[i]["exam_id"];
+          tableOutputString = tableOutputString + '<td>' + '<a href="#"' + "onclick=getExam(" + Exam_id + ")>" + response[i][key] + '</a>' + '</td>';
+        } else {
+          tableOutputString = tableOutputString + '<td>' + response[i][key] + '</td>';
+        }
+      }
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText);
+
+          if (response["taken"] == "true") {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                var response = JSON.parse(this.responseText);
+                if (response["graded"] == "true") {
+                  tableOutputString = tableOutputString + '<td>' + "graded" + '</td>' + '</tbody>';
+                } else {
+                  tableOutputString = tableOutputString + '<td>' + "Not graded" + '</td>' + '</tbody>';
+                }
+              }
+            };
+            xhttp.open("POST", "getWasUserExamGraded.php?id=" + Exam_id, false);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send();
+          } else {
+            tableOutputString = tableOutputString + '<td>' + "Not taken" + '</td>';
+            tableOutputString = tableOutputString + '</tr>';
+          }
+
+        }
+
+
+
+      };
+      xhttp.open("POST", "getDidTakeExam.php?id=" + Exam_id, false);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send();
+
+      tableOutputString = tableOutputString + '</tbody>';
+    }
+    document.getElementById("responstable").innerHTML = tableOutputString;
+
+  }
+
+
+  function getExam(id) {
+    // NOTE: to clear the content from the page
+    //alert(id);
+
+    // assigning exam id to Exam_Id
+    window.Exam_Id = id;
+
+    document.getElementById("responstable").innerHTML = "";
+    document.getElementById("selection").innerHTML = "";
+
+    document.getElementById("examheading").innerHTML = "Exam Starts";
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText); //  //  /////////
+        displayExam(response); //  //  /////////
+      }
+    };
+    xhttp.open("POST", "getRequestedExam.php?id=" + id, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
+
+    // contact the php and get the exam questions
+  }
+
+  function displayExam(response) {
+    var noOfquestions = Object.keys(response).length;
+    var exampaper = "";
+    var questionID = "";
+
+    for (var index = 0; index < noOfquestions; index++) {
+      var question_id = response[index]["question_id"];
+      var question_body = response[index]["question_body"];
+
+      window.question_ids.push(question_id);
+
+      exampaper = exampaper + '<h3 style="float:left;">' + (index + 1) + ") " + question_body + '</h3>';
+      exampaper = exampaper + '<textarea placeholder="Enter your code..." id=' + question_id + ' class="questions">' + '</textarea>';
+    }
+    exampaper = exampaper + '<button type="button" class="submitbutton" onclick="sendanswersTophp()">Submit</button>';
+    document.getElementById("exam").innerHTML = exampaper;
+  }
+
+  function sendanswersTophp() {
+    for (var index = 0; index < window.question_ids.length; index++) {
+
+      var qu_id = window.question_ids[index];
+
+      var responseTosend = {};
+      responseTosend["Exam_Id"] = window.Exam_Id;
+      responseTosend["question_id"] = qu_id;
+      responseTosend["question_body"] = document.getElementById(qu_id).value;
+
+      var JsonString = JSON.stringify(responseTosend);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+
+        }
+      };
+
+      xhttp.open("POST", "sendAnswers.php", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send(JsonString);
+
+    }
+  }
+</script>
+
+</html>

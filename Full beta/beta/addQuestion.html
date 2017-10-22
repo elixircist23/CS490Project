@@ -1,0 +1,136 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    body {
+      background-color: #e9ebee;
+      font-family: sans-serif;
+    }
+
+    #logoutPannel {
+      background-color: rgba(44, 62, 80, 1.0);
+    }
+
+    #logoutPannel input {
+      background-color: #1ABC9C;
+      color: white;
+      padding: 18px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+    }
+
+    #logoutPannel input:hover {
+      cursor: pointer;
+    }
+
+
+    .submitbutton {
+      padding: 10px 40px;
+      margin-top: 35px;
+      border: 3px solid black;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: all .2s linear;
+    }
+
+    .submitbutton:hover {
+      color: white;
+      background-color: #282830;
+      cursor: pointer;
+    }
+    table{
+      margin-top: 50px;
+    }
+
+    table td{
+      margin: 15px;
+      padding: 15px;
+    }
+    
+    table td input{
+      height: 20px;
+      float:left;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NOTE:        LogOut Button  -->
+  <div id=logoutPannel>
+    <form align="right" name="logout" method="post" action="Login.html">
+      <label class="logoutButton">
+         <input name="submit" type="submit" id="submit" value="Log Out">
+     </label>
+    </form>
+  </div>
+
+  <div style="text-align:center">
+    <form>
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              Question:
+            </td>
+            <td>
+              <textarea id=question rows=5 cols=100></textarea>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Points:
+            </td>
+            <td>
+              <input id=point type="number" min="1" max="100" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button type="button" class="submitbutton" onclick="sendQuesition()">Submit</button>
+    </form>
+
+  </div>
+
+
+</body>
+<script>
+      function sendQuesition(){
+          var question = document.getElementById("question").value;
+          var point = document.getElementById("point").value;
+          var responseTosend = {};
+          
+          responseTosend["question_body"] = question;
+          responseTosend["question_weight"] = point;
+    
+          var JsonString = JSON.stringify(responseTosend);
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+    
+            }
+          };
+    
+          xhttp.open("POST", "createQuestion.php", true);
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.send(JsonString);
+
+      }
+</script>
+
+</html>
