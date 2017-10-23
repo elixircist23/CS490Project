@@ -244,9 +244,22 @@ session_start();
               if (this.readyState == 4 && this.status == 200) {
                 var response = JSON.parse(this.responseText);
                 if (response["graded"] == "true") {
-                  tableOutputString = tableOutputString + '<td>' + "graded" + '</td>' + '</tbody>';
+                
+                  var xhttp = new XMLHttpRequest();
+                  xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                         var response = JSON.parse(this.responseText);
+                        tableOutputString = tableOutputString + '<td>' + response[0]["grade"] + '</td>' + '</tr>';
+                        
+                    }
+                  };
+                 
+                  xhttp.open("POST", "getGrade.php?id=" + Exam_id, false);
+                  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                  xhttp.send();
+
                 } else {
-                  tableOutputString = tableOutputString + '<td>' + "Not graded" + '</td>' + '</tbody>';
+                  tableOutputString = tableOutputString + '<td>' + "Not graded" + '</td>' + '</tr>';
                 }
               }
             };

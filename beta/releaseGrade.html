@@ -1,0 +1,219 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+  * {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    body {
+      background-color: #e9ebee;
+      font-family: sans-serif;
+    }
+
+    #logoutPannel {
+      background-color: rgba(44, 62, 80, 1.0);
+    }
+
+    #logoutPannel input {
+      background-color: #1ABC9C;
+      color: white;
+      padding: 18px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+    }
+
+    #logoutPannel input:hover {
+      cursor: pointer;
+    }
+
+    #table{
+      text-align: center;
+    }
+    
+    #responstable {
+      text-transform: capitalize;
+      padding: 5px;
+      border-spacing: 10px;
+      margin: 3em auto;
+      width: 80%;
+      overflow: hidden;
+      background: #FFF;
+      color: #024457;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      border-radius: 1.5px;
+    }
+
+    #responstable tr:nth-child(odd) {
+      background-color: #EAF3F3;
+    }
+
+    #responstable th {
+      display: none;
+      background-color: #7D1424;
+      color: #FFF;
+      padding: 1em;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+
+    #responstable th:first-child {
+      display: table-cell;
+      text-align: center;
+    }
+
+    #responstable th:nth-child(2) {
+      display: table-cell;
+    }
+
+    #responstable th:nth-child(2) span {
+      display: none;
+    }
+
+    #responstable th:nth-child(2):after {
+      content: attr(data-th);
+    }
+
+    #responstable td {
+      display: block;
+      word-wrap: break-word;
+      max-width: 7em;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    }
+
+
+    #responstable th,
+    #responstable td {
+      text-align: center;
+      margin: .5em 1em;
+    }
+
+    @media (min-width: 480px) {
+      #responstable th,
+      #responstable td {
+        display: table-cell;
+        padding: 1em;
+      }
+    }
+    
+    .submitbutton {
+      padding: 10px 40px;
+      margin-top: 35px;
+      border: 3px solid black;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: all .2s linear;
+    }
+
+    .submitbutton:hover {
+      color: white;
+      background-color: #282830;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body onload="sendtoexam()">
+
+  <!-- NOTE:        LogOut Button  -->
+ <div id=logoutPannel>
+   <form align="right" name="logout" method="post" action="Login.html">
+     <label class="logoutButton">
+         <input name="submit" type="submit" id="submit" value="Log Out">
+     </label>
+   </form>
+ </div>
+
+ <!-- Options -->
+<div id="table">
+    <form>
+      <table id="responstable"></table>
+      <button type="button" class="submitbutton" onclick="releaseGrade()">Submit</button>
+    </form>
+  </div>
+</body>
+
+<script>
+    
+    var return_exam_id = 0;
+
+    function sendtoexam() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        displayExams(response);
+      }
+    };
+    xhttp.open("GET", "requestExam.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
+  }
+  
+   function displayExams(response){
+      var header = ["", "Exams"];
+      var lengthOfJSON = Object.keys(response).length;
+      var tableOutputString = "";
+      
+      tableOutputString = tableOutputString + '<thead> <tr>';
+
+      for (var index = 0; index < header.length; index++) {
+        tableOutputString = tableOutputString + '<th style = "text-align: center">' + header[index] + '</th>';
+      }
+      tableOutputString = tableOutputString + '</tr> </thead>';
+      
+      //////// body 
+      tableOutputString = tableOutputString + '<tbody>';
+      
+      /*     checkbox     value=question_id     question*/
+       for (var i = 0; i < lengthOfJSON; i++){
+           tableOutputString = tableOutputString + '<tr>';
+           tableOutputString = tableOutputString + '<td>';
+           tableOutputString = tableOutputString + '<input type="radio" name="chk_exam"' + " " +  "value =" + response[i]["exam_id"] + ">";
+           tableOutputString = tableOutputString + '</td>';
+           tableOutputString = tableOutputString + '<td>';
+           tableOutputString = tableOutputString + response[i]["exam_name"];
+           tableOutputString = tableOutputString + '</td>';
+           tableOutputString = tableOutputString + '</tr>';
+       }
+      tableOutputString = tableOutputString + '</tbody>';
+      
+      document.getElementById("responstable").innerHTML = tableOutputString;
+  }
+  
+  function releaseGrade(){
+
+          var exam_id = document.getElementsByName("chk_exam");
+          var index = 0;
+          for (index; index < exam_id.length; index++) {
+            if (exam_id[index].checked) {
+             
+              window.return_exam_id = exam_id[index].value;
+              break;
+            }
+          }
+        
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+
+        }
+      };
+
+      xhttp.open("POST", "requestToReleaseGrades.php?id=" + return_exam_id, true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send();
+
+  }
+
+</script>
+</html>
