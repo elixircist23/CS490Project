@@ -11,13 +11,13 @@
 
         mysql_select_db('as2487');
 
-        $query = sprintf('SELECT exam_id FROM Results WHERE exam_id = "%s" AND username = "%s";', $id, $user);
+        $query = sprintf('SELECT grade FROM UserGrades WHERE exam_id = "%s" AND username = "%s";', $id, $user);
         $result = mysql_query($query);
 
         $returnArray = array();
 
         while($row = mysql_fetch_array($result)){
-                $returnArray[] = array('exam_id' => $row['exam_id']);
+                $returnArray[] = array('grade' => $row['grade']);
         }
 
         if(empty($returnArray)){

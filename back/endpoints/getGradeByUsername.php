@@ -8,14 +8,15 @@
         }
 
         $user = $_GET['user'];
+	$exam_id = $_GET['id'];
 
-        $query = sprintf("SELECT exam_id, grade FROM UserGrades WHERE username = '%s';", $user);
+        $query = sprintf("SELECT grade FROM UserGrades WHERE username = '%s' AND exam_id = '%s';", $user, $exam_id);
 
         $result = mysql_query($query);
         $returnArray = array();
 
         while($row = mysql_fetch_array($result)){
-                $returnArray[] = array('exam_id' => $row['exam_id'], 'grade' =>
+                $returnArray[] = array('grade' =>
                 $row['grade']);
         }
 

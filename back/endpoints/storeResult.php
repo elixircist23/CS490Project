@@ -16,7 +16,8 @@
 
         mysql_select_db('as2487');
 
-        $query = sprintf('INSERT INTO Results (username, test_case_id, question_id, answer_id, test_case_result) VALUES ("%s", %s, %s, %s, "%s");', $username, $test_case_id, $question_id, $answer_id, $test_case_result);
+        $query = sprintf('INSERT INTO Results (exam_id, username, test_case_id, question_id, answer_id, test_case_result) VALUES ("%s", "%s",
+	%s, %s, %s, "%s");', $exam_id, $username, $test_case_id, $question_id, $answer_id, $test_case_result);
         mysql_query($query);
 
         mysql_close($link);
