@@ -6,7 +6,7 @@
   $arrayJSON= json_decode(stripslashes($str_json), true);
   
   
-  $url = 'https://web.njit.edu/~as2487/cs490/beta/createTestCase.php';
+  $url = 'https://web.njit.edu/~kb295/cs490/beta/createTestCase.php';
   
   
     $data = array(

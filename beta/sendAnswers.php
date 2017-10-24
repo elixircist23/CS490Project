@@ -3,7 +3,7 @@
   
   $str_json = file_get_contents('php://input');
   
-  $arrayJSON= json_decode(stripslashes($str_json), true);
+  $arrayJSON= json_decode($str_json, true);
   
 
 //$_SESSION["username"]
@@ -17,7 +17,7 @@
 
 
   //API Url
-  $url = 'https://web.njit.edu/~as2487/cs490/beta/storeUserAnswer.php';
+  $url = 'https://web.njit.edu/~kb295/cs490/beta/storeUserAnswer.php';
    
   //Initiate cURL.
   $ch = curl_init($url);

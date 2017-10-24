@@ -6,16 +6,13 @@
   $arrayJSON= json_decode(stripslashes($str_json), true);
   
   
-  $url = 'https://web.njit.edu/~as2487/cs490/beta/createExam.php';
+  $url = 'https://web.njit.edu/~kb295/cs490/beta/createExam.php';
   
-   print_r($arrayJSON);
-  
- 
   //Initiate cURL.
   $ch = curl_init($url);
    
   //Encode the array into JSON.
-  $jsonDataEncoded = json_encode($tr_json);
+  $jsonDataEncoded = json_encode($arrayJSON);
  
   //echo sizeof($arrayJSON);
    

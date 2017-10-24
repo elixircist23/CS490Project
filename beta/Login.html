@@ -137,7 +137,7 @@ session_start();
     <div>
       <ul>
         <li>
-          <input type="radio" id="Instructor" name="selector" value=intructor>
+          <input type="radio" id="Instructor" name="selector" value=instructor>
           <label for="Instructor">Instructor</label>
           <div class="check"></div>
         </li>
@@ -214,7 +214,7 @@ session_start();
             var response = JSON.parse(this.responseText);
 
 
-            if (response["answer_db"] == true && selectorValue == "intructor" ) {
+            if (response["answer_db"] == true && selectorValue == "instructor" ) {
               window.location = "Instructor.html";
             } 
             else if (response["answer_db"] == true && selectorValue == "student") {            

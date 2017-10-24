@@ -11,7 +11,7 @@
 
 
   //API Url
-  $url = 'https://web.njit.edu/~as2487/cs490/beta/createQuestion.php';
+  $url = 'https://web.njit.edu/~kb295/cs490/beta/createQuestion.php';
    
   //Initiate cURL.
   $ch = curl_init($url);
