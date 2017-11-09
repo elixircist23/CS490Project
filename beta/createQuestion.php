@@ -7,6 +7,9 @@
   $data = array(
     'question_body'  => $arrayJSON[question_body],
     'question_weight' => $arrayJSON[question_weight],
+    'question_difficulty' => $arrayJSON[question_difficulty],
+    'question_topic' => $arrayJSON[question_topic]
+
 );
 
 

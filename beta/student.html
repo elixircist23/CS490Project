@@ -225,14 +225,11 @@ session_start();
       tableOutputString = tableOutputString + '<td>' + (i + 1) + '</td>';
 
       
-      for (var key in response[i]) {
-        if (key == "exam_name") {
-          Exam_id = response[i]["exam_id"];
-          tableOutputString = tableOutputString + '<td>' + '<a href="#"' + "onclick=getExam(" + Exam_id + ")>" + response[i][key] + '</a>' + '</td>';
-        } else {
-          tableOutputString = tableOutputString + '<td>' + response[i][key] + '</td>';
-        }
-      }
+      var Exam_id = response[i]["exam_id"];
+      var Exam_name = response[i]["exam_name"];
+      
+      tableOutputString = tableOutputString + '<td>' + Exam_id + '</td>';
+    
 
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -250,6 +247,7 @@ session_start();
                   xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                          var response = JSON.parse(this.responseText);
+                        tableOutputString = tableOutputString + '<td>' + '<a href="#"' + "onclick=getExamWithAnswers(" + Exam_id + ")>" + Exam_name + '</td>';
                         tableOutputString = tableOutputString + '<td>' + response[0]["grade"] + '</td>' + '</tr>';
                         
                     }
@@ -260,6 +258,7 @@ session_start();
                   xhttp.send();
 
                 } else {
+                  tableOutputString = tableOutputString + '<td>' + Exam_name + '</td>';
                   tableOutputString = tableOutputString + '<td>' + "Not graded" + '</td>' + '</tr>';
                 }
               }
@@ -268,14 +267,12 @@ session_start();
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send();
           } else {
+            tableOutputString = tableOutputString + '<td>' + '<a href="#"' + "onclick=getExam(" + Exam_id + ")>" +  Exam_name + '</td>';
             tableOutputString = tableOutputString + '<td>' + "Not taken" + '</td>';
             tableOutputString = tableOutputString + '</tr>';
           }
 
         }
-
-
-
       };
       xhttp.open("POST", "getDidTakeExam.php?id=" + Exam_id, false);
       xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -322,10 +319,11 @@ session_start();
     for (var index = 0; index < noOfquestions; index++) {
       var question_id = response[index]["question_id"];
       var question_body = response[index]["question_body"];
+      var question_weight = response[index]["question_weight"];
 
       window.question_ids.push(question_id);
 
-      exampaper = exampaper + '<h3 style="float:left;">' + (index + 1) + ") " + question_body + '</h3>';
+      exampaper = exampaper + '<h3 style="float:left;">' + (index + 1) + ") " + question_body + ' (Points = ' + question_weight + ')' + '</h3>';
       exampaper = exampaper + '<textarea placeholder="Enter your code..." id=' + question_id + ' class="questions">' + '</textarea>';
     }
     exampaper = exampaper + '<button type="button" class="submitbutton" onclick="sendanswersTophp()">Submit</button>';
@@ -356,6 +354,20 @@ session_start();
 
     }
   }
+  
+  function getExamWithAnswers(Exam_id){
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText); //  //  /////////
+        displayExam(response); //  //  /////////
+      }
+    };
+    xhttp.open("POST", "getExamWithAnswers.php?id=" + Exam_id, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
+  }
+   
 </script>
 
 </html>

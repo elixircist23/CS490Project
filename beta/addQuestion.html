@@ -37,135 +37,227 @@ session_start();
       cursor: pointer;
     }
 
-
-    .submitbutton {
-      padding: 10px 40px;
-      margin-top: 35px;
-      border: 3px solid black;
-      font-weight: bold;
-      letter-spacing: 1px;
-      transition: all .2s linear;
+    #createQuestion {
+      padding: 25px;
     }
 
-    .submitbutton:hover {
-      color: white;
-      background-color: #282830;
-      cursor: pointer;
-    }
-    table{
-      margin-top: 50px;
+    ul {
+      list-style: none;
     }
 
-    table td{
-      margin: 15px;
-      padding: 15px;
+    label {
+      font-size: 25px;
+    }
+
+    textarea {
+      margin: 5px 0px;
+      margin-bottom: 15px;
+      padding: 5px;
+    }
+
+    #point,
+    #topic,
+    #difficulty {
+      line-height: 25px;
+      padding: 5px;
+      margin-bottom: 25px;
+    }
+
+    #POITable {
+      margin: 70px 0px 20px 0px;
+      font-family: arial, sans-serif;
+      border-collapse: inherit;
+    }
+
+    .index {
+      text-align: center;
+    }
+
+    .input,
+    th {
+      border: none;
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      text-align: center;
+    }
+
+    #delPOIbutton,
+    #addmorePOIbutton {
+      height: 100%;
+      padding: 8px;
+    }
+
+    input {
+      border: none;
     }
     
-    table td input{
-      height: 20px;
-      float:left;
+    .buttonEffect:hover{
+      background-color: rgba(44, 62, 80,1.0);
+      color: white;
     }
-
   </style>
 </head>
 
 <body>
+  <form id=allquestions>
+    <div id="createQuestion">
+      <ul class=question>
+        <li>
+          <label for=question>Question:</label>
+          <br />
+          <p style="margin-top: 5px;">Write a function named <input type=text id="functionName" style="border:none;color:blue; background-color:inherit; border-bottom: 1px solid black; outline
+            :none" /> which takes parameter <input type="text" id=parameter style="border:none;color:blue; background-color:inherit; border-bottom: 1px solid black; outline : none" /></p>
+          <textarea id=question rows=5 cols=100></textarea></label>
+        </li>
+        <li style="margin-top:15px">
+          <label for=topic>Topic:</label>
+          <input id=topic type="text" style="margin-right: 15px;" />
 
-  <!-- NOTE:        LogOut Button  -->
-  <div id=logoutPannel>
-    <form align="right" name="logout" method="post" action="Login.html">
-      <label class="logoutButton">
-         <input name="submit" type="submit" id="submit" value="Log Out">
-     </label>
-    </form>
-  </div>
+          <label for=point>Points:</label>
+          <input id=point type="number" min="1" max="100" style="margin-right: 15px;" />
 
-  <div style="text-align:center">
-    <form>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              Question:
-            </td>
-            <td>
-              <textarea id=question rows=5 cols=100></textarea>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Points:
-            </td>
-            <td>
-              <input id=point type="number" min="1" max="100" />
-            </td>
-          </tr>
-           <tr>
-            <td>
-              Test Case:
-            </td>
-            <td>
-              <input id=testcase type="text"/>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Answer:
-            </td>
-            <td>
-              <input id=answer type="text"/>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button type="button" class="submitbutton" onclick="sendQuesition()">Submit</button>
-    </form>
+          <label for=point>Difficulty:</label>
+          <select id=difficulty>
+            <option value="volvo">Easy</option>
+            <option value="saab">Medium</option>
+            <option value="opel">Hard</option>
+          </select>
 
-  </div>
-
-
+        </li>
+        <li>
+          <table id="POITable" border="1" cellpadding=8 cellspacing=8>
+            <tr>
+              <th>Index</th>
+              <th>Test Case</th>
+              <th>Answer</th>
+            </tr>
+            <tr>
+              <td class=index>1</td>
+              <td><input size=25 type="text" id="latbox" class=input /></td>
+              <td><input size=25 type="text" id="lngbox" class=input /></td>
+              <td><input type="button" id="delPOIbutton" value="Delete" onclick="deleteRow(this)" /></td>
+              <td><input type="button" id="addmorePOIbutton" value="Add" onclick="insRow()" /></td>
+            </tr>
+          </table>
+        </li>
+      </ul>
+      <input type=button class= buttonEffect id=sumbmit onclick="submitQuestion(1)" value=Submit style="padding:10px 20px; margin:5px; cursor: pointer; " />
+      <input type=button class= buttonEffect id=addquestion value="Add Question" onclick="submitQuestion(2)" style="padding:10px 20px;margin:5px ; cursor: pointer;" />
+    </div>
+  </form>
 </body>
 <script>
-      function sendQuesition(){
-          var question = document.getElementById("question").value;
-          var point = document.getElementById("point").value;
-          var testcase = document.getElementById("testcase").value;
-          var answer = document.getElementById("answer").value;
-          var responseTosend = {};
-          
-          responseTosend["question_body"] = question;
-          responseTosend["question_weight"] = point;
+  function deleteRow(row) {
+    var i = row.parentNode.parentNode.rowIndex;
+    document.getElementById('POITable').deleteRow(i);
+    var indexRow = document.getElementsByClassName("index")
+    for (var j = 0; j < document.getElementById("POITable").rows.length; j++) {
+      indexRow[j].innerHTML = j + 1;
+    }
+  }
+
+
+  function insRow() {
+    var x = document.getElementById('POITable');
+    var new_row = x.rows[1].cloneNode(true);
+    var len = x.rows.length;
+    new_row.cells[0].innerHTML = len;
+
+    var inp1 = new_row.cells[1].getElementsByTagName('input')[0];
+    inp1.id += len;
+    inp1.value = '';
+    var inp2 = new_row.cells[2].getElementsByTagName('input')[0];
+    inp2.id += len;
+    inp2.value = '';
+    x.appendChild(new_row);
+  }
+
+  function submitQuestion(x) {
+    var question_body = document.getElementById("question").value;
+    var question_weight = document.getElementById("point").value;
+
+    var e = document.getElementById("difficulty");
+    var difficultyLevel = e.options[e.selectedIndex].text;
+
+    var _funtionName = document.getElementById("functionName").value;
+    var _parameter = document.getElementById("parameter").value;
+
+    var topic = document.getElementById("topic").value;
+
+    var responseTosend = [];
+
+    var table = document.getElementById("POITable");
+   
+
+    var sendQuestionDetail = {};
+
+    sendQuestionDetail["question_body"] = "Write a function named " + _funtionName + " " + "which takes parameter "+ _parameter + " " + question_body;
+    sendQuestionDetail["question_weight"] = question_weight;
+    sendQuestionDetail["question_difficulty"] = difficultyLevel;
+    sendQuestionDetail["question_topic"] = topic;
     
-          var JsonString = JSON.stringify(responseTosend);
-          var xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var question_id = JSON.parse(this.responseText);
-                var testcaseTosend = {};
-          
-                testcaseTosend["question_id"] = question_id;
-                testcaseTosend["test_case"] = testcase;
-                testcaseTosend["test_case_answer"] = answer;
-                 var JsonString = JSON.stringify(testcaseTosend);
-                 var xhttp = new XMLHttpRequest();
-                 
-                 xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                }
-          };
-    
-            xhttp.open("POST", "sendTestCase.php", false);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send(JsonString);
-     
+    console.log(sendQuestionDetail);
+
+    var JsonString = JSON.stringify(sendQuestionDetail);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var question_id = JSON.parse(this.responseText);
+        
+        for (var i = 1; i < table.rows.length; i++) {
+              responseTosend.push({
+                "question_id": question_id,
+                "test_case": table.rows[i].cells[1].children[0].value,
+                "test_case_answer": table.rows[i].cells[2].children[0].value
+              });
             }
-          };
-    
-          xhttp.open("POST", "createQuestion.php", false);
-          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          xhttp.send(JsonString);
+            responseTosend.push({
+              "question_id": question_id,
+              "test_case": "_NAME",
+              "test_case_answer": _funtionName
+            });
+            responseTosend.push({
+              "question_id": question_id,
+              "test_case": "_PARAMETER",
+              "test_case_answer": _parameter
+            });
+            responseTosend.push({
+              "question_id": question_id,
+              "test_case": "_TOPIC",
+              "test_case_answer": topic
+            });
+            
+        var JsonString = JSON.stringify(responseTosend);
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            //window.location.assign("Instructor.html");
+            
+            
+            if(x == 1){
+                window.location.assign("Instructor.html");
+            }else{
+                window.location.assign("addQuestion.html");
+            }
+          }
+        };
+
+        xhttp.open("POST", "sendTestCase.php", false);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(JsonString);
 
       }
+    };
+
+    xhttp.open("POST", "createQuestion.php", false);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(JsonString);
+
+  }
 </script>
 
 </html>

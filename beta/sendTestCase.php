@@ -5,15 +5,10 @@
   
   $arrayJSON= json_decode(stripslashes($str_json), true);
   
+  echo $arrayJSON;
+  
   
   $url = 'https://web.njit.edu/~kb295/cs490/beta/createTestCase.php';
-  
-  
-    $data = array(
-    'question_id'  => $arrayJSON[question_id],
-    'test_case' => $arrayJSON[test_case],
-    'test_case_answer' => $arrayJSON[test_case_answer]
-  );
 
   
  
@@ -21,7 +16,7 @@
   $ch = curl_init($url);
    
   //Encode the array into JSON.
-  $jsonDataEncoded = json_encode($data);
+  $jsonDataEncoded = json_encode($arrayJSON);
  
   //echo sizeof($arrayJSON);
    
