@@ -1,8 +1,8 @@
 <?php
 	//Creating a valid user and pass to store in the database
-	$user = "ali";
+	$user = "tony";
 	$pass = "1234";
-	$type = "instructor";
+	$type = "student";
 	//Won't be storing plaintext password, so hash the password and store the hash in the database
 	$hash = password_hash($pass, PASSWORD_DEFAULT);
 
