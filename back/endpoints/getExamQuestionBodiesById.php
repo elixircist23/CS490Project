@@ -9,13 +9,13 @@
 
         $id = $_GET['id'];
 
-        $query = sprintf("select question_id, question_body from Questions where question_id in (select
+        $query = sprintf("select question_id, question_body, question_weight from Questions where question_id in (select
 	question_id from Exams where exam_id = %s);", $id);
         $result = mysql_query($query);
         $returnArray = array();
 
         while($row = mysql_fetch_array($result)){
-                $returnArray[] = array('question_id' => $row['question_id'], 'question_body' => $row['question_body']);
+                $returnArray[] = array('question_weight' => $row['question_weight'], 'question_id' => $row['question_id'], 'question_body' => $row['question_body']);
         }
 
         $json = json_encode($returnArray);

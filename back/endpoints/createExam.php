@@ -12,7 +12,7 @@
 	$result = mysql_query('SELECT MAX(exam_id) FROM Exams;');
 	$exam_id =  mysql_result($result, 0);
 	$exam_id++;
-	
+
 	$length = count($body);
 	for($i = 0; $i < $length; $i++){
 		$exam_name = $body[$i]['exam_name'];
