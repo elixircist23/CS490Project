@@ -3,13 +3,14 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-  * {
+    * {
       padding: 0px;
       margin: 0px;
     }
@@ -19,33 +20,72 @@ session_start();
       font-family: sans-serif;
     }
 
-    #logoutPannel {
-      background-color: rgba(44, 62, 80, 1.0);
+    ul {
+      list-style-type: none;
+      margin: 0;
+      line-height: 25px;
+      overflow: hidden;
+      background-color: #333;
     }
 
-    #logoutPannel input {
-      background-color: #1ABC9C;
+    li {
+      float: left;
+    }
+
+    li a,
+    .dropbtn {
+      display: inline-block;
       color: white;
-      padding: 18px;
-      border: none;
-      outline: none;
-      font-size: 18px;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
     }
 
-    #logoutPannel input:hover {
-      cursor: pointer;
+    li a:hover,
+    .dropdown:hover .dropbtn {
+      background-color: rgba(231, 76, 60, 1.0);
     }
-    
-    #table{
+
+    li.dropdown {
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+
+    #table {
       text-align: center;
     }
-    
-     #responstable {
+
+    #responstable {
       text-transform: capitalize;
       padding: 5px;
       border-spacing: 10px;
       margin: 2em auto;
-      width: 80%;
+      width: 90%;
       overflow: hidden;
       background: #FFF;
       color: #024457;
@@ -59,11 +99,15 @@ session_start();
 
     #responstable th {
       display: none;
-      background-color: #7D1424;
+      background-color: #48569E;
       color: #FFF;
       padding: 1em;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     }
+    
+     #responstable th:hover{
+       cursor : auto;
+     }
 
     #responstable th:first-child {
       display: table-cell;
@@ -90,6 +134,13 @@ session_start();
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     }
 
+    #responstable td:nth-child(2) {
+      width: 60%;
+    }
+
+    #responstable td:nth-child(4) {
+      width: 15%;
+    }
 
     #responstable th,
     #responstable td {
@@ -104,9 +155,7 @@ session_start();
         padding: 1em;
       }
     }
-    
-    
-    
+
     .submitbutton {
       padding: 10px 40px;
       margin-top: 5px;
@@ -121,32 +170,36 @@ session_start();
       background-color: #282830;
       cursor: pointer;
     }
-
-
   </style>
 </head>
+
 <body onload="getQuestion()">
 
-  <!-- NOTE:        LogOut Button  -->
- <div id=logoutPannel>
-   <form align="right" name="logout" method="post" action="Login.html">
-     <label class="logoutButton">
-         <input name="submit" type="submit" id="submit" value="Log Out">
-     </label>
-   </form>
- </div>
+  <ul>
+    <li><a href="Instructor.html">MainMenu</a></li>
+    <li class="dropdown">
+      <a href="javascript:void(0)" class="dropbtn">Dropdown</a>
+      <div class="dropdown-content">
+        <a href="releaseGrade.html">Release Grade</a>
+        <a href="makeExam.html">Make an Exam</a>
+        <a href="addQuestion.html">Add Question</a>
+      </div>
+    </li>
+    <li style="float:right"><a href="Login.html" class="logoutButton">Logout</a></li>
+  </ul>
 
- <div id=table>
+  <div id=table>
     <form>
-        <span style="font-size: 30px;">Exam Name:</span> <input type = "text" placeholder="Enter exam name here" id="exam_name" style="margin:40px; height: 30px; width: 300px; border: none; outline: none; border-bottom: 1px solid black; background-color:#e9ebee; font-size: 20px;"/></br>
-        <table id=responstable></table>
-        <button type="button" class="submitbutton" onclick="sendToSendQUestionIds()">Submit</button>
+      <span style="font-size: 30px;">Exam Name:</span> <input type="text" placeholder="Enter exam name here" id="exam_name" style="margin:40px; height: 30px; width: 300px; border: none; outline: none; border-bottom: 1px solid black; background-color:#e9ebee; font-size: 20px;"
+      /></br>
+      <table id=responstable></table>
+      <button type="button" class="submitbutton" onclick="sendToSendQUestionIds()">Submit</button>
     </form>
- </div>
+  </div>
 
 </body>
 <script>
-  function getQuestion(){
+  function getQuestion() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -159,63 +212,172 @@ session_start();
     xhttp.send();
   }
 
-  function displayQuestions(response){
-      var header = ["", "Questions", "Points"];
-      var lengthOfJSON = Object.keys(response).length;
-      var tableOutputString = "";
-      
-      tableOutputString = tableOutputString + '<thead> <tr>';
+  function displayQuestions(response) {
+    var header = ["", "Questions", "Points", "Topic", "Difficulty"];
+    var lengthOfJSON = Object.keys(response).length;
+    var tableOutputString = "";
 
-      for (var index = 0; index < header.length; index++) {
+    tableOutputString = tableOutputString + '<thead> <tr>';
+
+    for (var index = 0; index < header.length; index++) {
+      if (index < 2)
         tableOutputString = tableOutputString + '<th style = "text-align: center">' + header[index] + '</th>';
+      else {
+        tableOutputString = tableOutputString + '<th onclick=sortTable(' + index + ') style = "text-align: center">' + header[index] + '</th>';
       }
-      tableOutputString = tableOutputString + '</tr> </thead>';
-      
-      //////// body 
-      tableOutputString = tableOutputString + '<tbody>';
-      
-      /*     checkbox     value=question_id     question*/
-       for (var i = 0; i < lengthOfJSON; i++){
-           tableOutputString = tableOutputString + '<tr>';
-           tableOutputString = tableOutputString + '<td>';
-           tableOutputString = tableOutputString + '<input type="checkbox" name="chk_group"' + " " +  "value =" + response[i]["question_id"] + ">";
-           tableOutputString = tableOutputString + '</td>';
-           tableOutputString = tableOutputString + '<td>';
-           tableOutputString = tableOutputString + response[i]["question_body"];
-           tableOutputString = tableOutputString + '</td>';
-           tableOutputString = tableOutputString + '<td>';
-           tableOutputString = tableOutputString + response[i]["question_weight"];
-           tableOutputString = tableOutputString + '</td>';
-           tableOutputString = tableOutputString + '</tr>';
-       }
-      tableOutputString = tableOutputString + '</tbody>';
-      
-      document.getElementById("responstable").innerHTML = tableOutputString;
+    }
+    tableOutputString = tableOutputString + '</tr> </thead>';
+
+    //////// body
+    tableOutputString = tableOutputString + '<tbody>';
+
+    /*     checkbox     value=question_id     question*/
+    for (var i = 0; i < lengthOfJSON; i++) {
+      tableOutputString = tableOutputString + '<tr>';
+      tableOutputString = tableOutputString + '<td>';
+      tableOutputString = tableOutputString + '<input type="checkbox" name="chk_group"' + " " + "value =" + response[i]["question_id"] + ">";
+      tableOutputString = tableOutputString + '</td>';
+      tableOutputString = tableOutputString + '<td>';
+      tableOutputString = tableOutputString + response[i]["question_body"];
+      tableOutputString = tableOutputString + '</td>';
+      tableOutputString = tableOutputString + '<td>';
+      tableOutputString = tableOutputString + response[i]["question_weight"];
+      tableOutputString = tableOutputString + '</td>';
+      tableOutputString = tableOutputString + '<td>';
+      tableOutputString = tableOutputString + response[i]["question_topic"];
+      tableOutputString = tableOutputString + '</td>';
+      tableOutputString = tableOutputString + '<td>';
+      tableOutputString = tableOutputString + response[i]["question_difficulty"];
+      tableOutputString = tableOutputString + '</td>';
+      tableOutputString = tableOutputString + '</tr>';
+    }
+    tableOutputString = tableOutputString + '</tbody>';
+
+    document.getElementById("responstable").innerHTML = tableOutputString;
   }
-  
+
   function sendToSendQUestionIds() {
     var checkboxes = document.getElementsByName("chk_group");
     var exam_name = document.getElementById("exam_name").value;
     var messageTosend = [];
     var checkboxesChecked = [];
-    for (var i=0; i<checkboxes.length; i++) {
-       if (checkboxes[i].checked) {
-          messageTosend.push({"question_id":checkboxes[i].value, "exam_name" : exam_name});
-       }
+    for (var i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].checked) {
+        messageTosend.push({
+          "question_id": checkboxes[i].value,
+          "exam_name": exam_name
+        });
+      }
     }
     var JsonString = JSON.stringify(messageTosend);
     var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            window.location.assign("Instructor.html"); 
-        }
-      };
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        window.location.assign("Instructor.html");
+      }
+    };
 
-      xhttp.open("POST", "createExam.php", true);
-      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhttp.send(JsonString);
+    xhttp.open("POST", "createExam.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(JsonString);
 
   }
 
+  function sortTable(n) {
+    var table, rows, switching, i, row1, row2, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("responstable");
+    switching = true;
+    dir = "asc";
+
+    while (switching) {
+
+      switching = false;
+      rows = table.getElementsByTagName("tr");
+      for (i = 1; i < (rows.length - 1); i++) {
+        shouldSwitch = false;
+        row1 = rows[i].getElementsByTagName("td")[n];
+        row2 = rows[i + 1].getElementsByTagName("td")[n];
+        var a = parseInt(row1.innerHTML);  
+        var b = parseInt(row2.innerHTML);
+        
+        console.log("row1 is " + row1.innerHTML + " row2 is " + row2.innerHTML);
+        if (dir == "asc") {
+        
+        if ( n == 2){
+          if (a > b){
+            shouldSwitch = true;
+            break;
+          }
+        }
+        else{
+        
+          if ((row1.innerHTML.toLowerCase() > row2.innerHTML.toLowerCase()) && n != 4) {
+
+            shouldSwitch = true;
+            break;
+            
+          }
+          else{
+              if (row1.innerHTML.toLowerCase() == "medium" && row2.innerHTML.toLowerCase() == "easy"){
+                  shouldSwitch = true;
+                  break;
+              }
+              else if(row1.innerHTML.toLowerCase() == "hard" && row2.innerHTML.toLowerCase() == "medium"){
+                  shouldSwitch = true;
+                  break;
+              }
+              else if(row1.innerHTML.toLowerCase() == "hard" && row2.innerHTML.toLowerCase() == "easy"){
+                  shouldSwitch = true;
+                  break;
+              }
+          }
+          }
+        } else if (dir == "desc") {
+        
+        if ( n == 2){
+          if (a < b){
+            shouldSwitch = true;
+            break;
+          }
+        }
+        else{
+          if (row1.innerHTML.toLowerCase() < row2.innerHTML.toLowerCase() && n != 4) {
+            //if so, mark as a switch and break the loop:
+            
+            shouldSwitch = true;
+            break;
+          
+          }
+          else{
+              if (row1.innerHTML.toLowerCase() == "easy" && row2.innerHTML.toLowerCase() == "medium"){
+                  shouldSwitch = true;
+                  break;
+              }
+              else if(row1.innerHTML.toLowerCase() == "easy" && row2.innerHTML.toLowerCase() == "hard"){
+                  shouldSwitch = true;
+                  break;
+              }
+              else if(row1.innerHTML.toLowerCase() == "medium" && row2.innerHTML.toLowerCase() == "hard"){
+                  shouldSwitch = true;
+                  break;
+              }
+          }
+        }
+        }
+      }
+      if (shouldSwitch) {
+        
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        switchcount++;
+      } else {
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
 </script>
+
 </html>

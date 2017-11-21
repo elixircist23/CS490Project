@@ -3,10 +3,9 @@
   
   $str_json = file_get_contents('php://input');
   
-  $arrayJSON= json_decode(stripslashes($str_json), true);
+  $arrayJSON=json_decode($str_json, true);
   
-  echo $arrayJSON;
-  
+  print_r($arrayJSON);
   
   $url = 'https://web.njit.edu/~kb295/cs490/beta/createTestCase.php';
 

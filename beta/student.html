@@ -185,8 +185,19 @@ session_start();
 
   var Exam_Id = 0;
   var question_ids = new Array();
+  var username; 
+    
+  function getUsername()
+  {
+    var parameters = location.search.substring(1).split("&");
+    var temp = parameters[0].split("=");
+    username= unescape(temp[1]);
+  }
+  
+
 
   function sendtoexam() {
+  getUsername();
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -247,7 +258,7 @@ session_start();
                   xhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                          var response = JSON.parse(this.responseText);
-                        tableOutputString = tableOutputString + '<td>' + '<a href="#"' + "onclick=getExamWithAnswers(" + Exam_id + ")>" + Exam_name + '</td>';
+                        tableOutputString = tableOutputString + '<td>' + "<a href=displayStudentExamWithAnswers.html?username=" + username + "&id=" + Exam_id + ">" + Exam_name + '</td>';
                         tableOutputString = tableOutputString + '<td>' + response[0]["grade"] + '</td>' + '</tr>';
                         
                     }
@@ -354,19 +365,7 @@ session_start();
 
     }
   }
-  
-  function getExamWithAnswers(Exam_id){
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        var response = JSON.parse(this.responseText); //  //  /////////
-        displayExam(response); //  //  /////////
-      }
-    };
-    xhttp.open("POST", "getExamWithAnswers.php?id=" + Exam_id, true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send();
-  }
+
    
 </script>
 
