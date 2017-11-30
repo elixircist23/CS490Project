@@ -14,7 +14,9 @@
 
 	while($row = mysql_fetch_array($result)){
 		$returnArray[] = array('question_id' => $row['question_id'], 'question_body' =>
-		$row['question_body'], 'question_weight' => $row['question_weight']);
+		$row['question_body'], 'question_weight' => $row['question_weight'],
+		'question_difficulty' => $row['question_difficulty'], 'question_topic' =>
+		$row['question_topic']);
 	}
 
 	$json = json_encode($returnArray);

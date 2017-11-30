@@ -17,6 +17,10 @@
 	for($i = 0; $i < $length; $i++){
 		$exam_name = $body[$i]['exam_name'];
 		$question_id = $body[$i]['question_id'];
+		$question_weight = $body[$i]['question_weight'];
+		$query0 = sprintf('update Questions set question_weight = %s where question_id =
+		%s', $question_weight, $question_id);
+		mysql_query($query0);
 		$query = sprintf('INSERT INTO Exams (exam_id, exam_name, question_id) VALUES ("%s","%s","%s");', $exam_id, $exam_name,
 		$question_id);
 		mysql_query($query);
