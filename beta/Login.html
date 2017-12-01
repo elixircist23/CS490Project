@@ -131,7 +131,7 @@ session_start();
               window.location = "Instructor.html";
             } 
             else if (response["answer_db"] == true && response["type"] == "student") {           
-              window.location = "student.html";
+              window.location = "student.html?username=" + username;
             } else {
               document.getElementById("message").innerHTML = "*" + " " + "Username or password is incorrect.";
               document.getElementById("message").style.color = "red";

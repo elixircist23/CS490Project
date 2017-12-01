@@ -16,8 +16,8 @@ session_start();
     }
 
     body {
-      background-color: #e9ebee;
-      font-family: sans-serif;
+      //background-color: #e9ebee;
+      font-family: 'Roboto', sans-serif;
     }
 
     #logoutPannel {
@@ -46,27 +46,36 @@ session_start();
     }
 
     label {
-      font-size: 25px;
+      font-size: 30px;
+      color: #B4886B;
+      font-weight: bold;
     }
+
 
     textarea {
       margin: 5px 0px;
       margin-bottom: 15px;
       padding: 5px;
+      border: none;
+      border-bottom: 1px solid black;
+      font-size: 15px;
     }
+
 
     #point,
     #topic,
     #difficulty {
-      line-height: 25px;
+      line-height: 20px;
       padding: 5px;
       margin-bottom: 25px;
+      border: 1px solid black;
     }
 
     #POITable {
-      margin: 70px 0px 20px 0px;
+      margin: 20px 0px 20px 0px;
       font-family: arial, sans-serif;
       border-collapse: inherit;
+      border-bottom: 2px solid #C82647;
     }
 
     .index {
@@ -80,6 +89,26 @@ session_start();
       padding: 8px;
     }
 
+    #POITable tr:nth-child(1) {
+      background-color: #422E39;
+      color: white;
+    }
+
+    #POITable td {
+      border: none;
+    }
+
+    #POITable td:nth-child(2),
+    #POITable td:nth-child(3) {
+      border: none;
+      border-bottom: 1px solid black;
+    }
+
+    #POITable td:nth-child(2) input,
+    #POITable td:nth-child(3) input {
+      background-color: transparent;
+    }
+
     th {
       text-align: center;
     }
@@ -87,48 +116,66 @@ session_start();
     #delPOIbutton,
     #addmorePOIbutton {
       height: 100%;
-      padding: 8px;
+      padding: 8px 20px;
+    }
+
+    #addmorePOIbutton:hover,
+    #delPOIbutton:hover {
+      background-color: rgba(44, 62, 80, 1.0);
+      color: white;
+      cursor: pointer;
     }
 
     input {
       border: none;
     }
-    
-    .buttonEffect:hover{
-      background-color: rgba(44, 62, 80,1.0);
+
+    .buttonEffect:hover {
+      background-color: rgba(44, 62, 80, 1.0);
       color: white;
     }
   </style>
 </head>
 
 <body>
+  <h1 style="text-align:center; padding: 15px; font-size: 40px;">Add Question</h1>
   <form id=allquestions>
     <div id="createQuestion">
       <ul class=question>
         <li>
           <label for=question>Question:</label>
           <br />
-          <p style="margin-top: 5px;">Write a function named <input type=text id="functionName" style="border:none;color:blue; background-color:inherit; border-bottom: 1px solid black; outline
-            :none" /> which takes parameter <input type="text" id=parameter style="border:none;color:blue; background-color:inherit; border-bottom: 1px solid black; outline : none" /></p>
+          <p style="margin-top: 5px;">Write a function named <input type=text placeholder="Enter function name" id="functionName" style="border:none;color:#E3000E; background-color:inherit; border-bottom: 1px solid black; outline:none; text-align: center; font-size : 20px;font-style: italic;"
+            /> which takes parameter <input type="text" placeholder="Enter parameters" id=parameter style="border:none;color:#E3000E; background-color:inherit; border-bottom: 1px solid black; outline : none; text-align: center; font-size: 20px;font-style: italic;"
+            /></p>
           <textarea id=question rows=5 cols=100></textarea></label>
         </li>
         <li style="margin-top:15px">
           <label for=topic>Topic:</label>
-          <input id=topic type="text" style="margin-right: 15px;" />
+          <select id=topic style="margin-right:30px;">
+            <option value="addition">Addition</option>
+            <option value="multiplication">Multiplication</option>
+            <option value="subtraction">Subtraction</option>
+            <option value="division">Division</option>
+            <option value="recursion">Recursion</option>
+            <option value="for_loop">For Loop</option>
+            <option value="while_loop">While Loop</option>
+            <option value="if">If</option>
+          </select>
 
           <label for=point>Points:</label>
-          <input id=point type="number" min="1" max="100" style="margin-right: 15px;" />
+          <input id=point type="number" min="1" max="100" style="margin-right: 30px;" />
 
           <label for=point>Difficulty:</label>
           <select id=difficulty>
-            <option value="volvo">Easy</option>
-            <option value="saab">Medium</option>
-            <option value="opel">Hard</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
           </select>
 
         </li>
         <li>
-          <table id="POITable" border="1" cellpadding=8 cellspacing=8>
+          <table id="POITable" cellpadding=8 cellspacing=10>
             <tr>
               <th>Index</th>
               <th>Test Case</th>
@@ -144,8 +191,8 @@ session_start();
           </table>
         </li>
       </ul>
-      <input type=button class= buttonEffect id=sumbmit onclick="submitQuestion(1)" value=Submit style="padding:10px 20px; margin:5px; cursor: pointer; " />
-      <input type=button class= buttonEffect id=addquestion value="Add Question" onclick="submitQuestion(2)" style="padding:10px 20px;margin:5px ; cursor: pointer;" />
+      <input type=button class=b uttonEffect id=sumbmit onclick="submitQuestion(1)" value=Submit style="padding:10px 20px; margin:5px; cursor: pointer; " />
+      <input type=button class=b uttonEffect id=addquestion value="Add Question" onclick="submitQuestion(2)" style="padding:10px 20px;margin:5px ; cursor: pointer;" />
     </div>
   </form>
 </body>
@@ -182,23 +229,27 @@ session_start();
     var e = document.getElementById("difficulty");
     var difficultyLevel = e.options[e.selectedIndex].text;
 
+
+
     var _funtionName = document.getElementById("functionName").value;
     var _parameter = document.getElementById("parameter").value;
 
-    var topic = document.getElementById("topic").value;
+    var t = document.getElementById("topic");
+    var topic = t.options[t.selectedIndex].text.toLowerCase();
+    console.log(topic);
 
     var responseTosend = [];
 
     var table = document.getElementById("POITable");
-   
+
 
     var sendQuestionDetail = {};
 
-    sendQuestionDetail["question_body"] = "Write a function named " + _funtionName + " " + "which takes parameter "+ _parameter + " " + question_body;
+    sendQuestionDetail["question_body"] = "Write a function named " + _funtionName + " " + "which takes parameter " + _parameter + " " + question_body;
     sendQuestionDetail["question_weight"] = question_weight;
     sendQuestionDetail["question_difficulty"] = difficultyLevel;
     sendQuestionDetail["question_topic"] = topic;
-    
+
     console.log(sendQuestionDetail);
 
     var JsonString = JSON.stringify(sendQuestionDetail);
@@ -206,42 +257,43 @@ session_start();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         var question_id = JSON.parse(this.responseText);
-        
+
         for (var i = 1; i < table.rows.length; i++) {
-              responseTosend.push({
-                "question_id": question_id,
-                "test_case": table.rows[i].cells[1].children[0].value,
-                "test_case_answer": table.rows[i].cells[2].children[0].value
-              });
-            }
-            responseTosend.push({
-              "question_id": question_id,
-              "test_case": "_NAME",
-              "test_case_answer": _funtionName
-            });
-            responseTosend.push({
-              "question_id": question_id,
-              "test_case": "_PARAMETER",
-              "test_case_answer": _parameter
-            });
-            responseTosend.push({
-              "question_id": question_id,
-              "test_case": "_TOPIC",
-              "test_case_answer": topic
-            });
-            
+          responseTosend.push({
+            "question_id": question_id,
+            "test_case": table.rows[i].cells[1].children[0].value,
+            "test_case_answer": table.rows[i].cells[2].children[0].value
+          });
+        }
+        responseTosend.push({
+          "question_id": question_id,
+          "test_case": "_NAME",
+          "test_case_answer": _funtionName
+        });
+        responseTosend.push({
+          "question_id": question_id,
+          "test_case": "_PARAMETER",
+          "test_case_answer": _parameter
+        });
+        responseTosend.push({
+          "question_id": question_id,
+          "test_case": "_TOPIC",
+          "test_case_answer": topic
+        });
+
+
         var JsonString = JSON.stringify(responseTosend);
         var xhttp = new XMLHttpRequest();
 
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             //window.location.assign("Instructor.html");
-            
-            
-            if(x == 1){
-                window.location.assign("Instructor.html");
-            }else{
-                window.location.assign("addQuestion.html");
+
+
+            if (x == 1) {
+              window.location.assign("Instructor.html");
+            } else {
+              window.location.assign("addQuestion.html");
             }
           }
         };

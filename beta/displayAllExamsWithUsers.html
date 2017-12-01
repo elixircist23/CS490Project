@@ -1,0 +1,242 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    body {
+      background-color: #e9ebee;
+      font-family: sans-serif;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      line-height: 25px;
+      overflow: hidden;
+      background-color: #333;
+    }
+
+    li {
+      float: left;
+    }
+
+    li a,
+    .dropbtn {
+      display: inline-block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+
+    li a:hover,
+    .dropdown:hover .dropbtn {
+      background-color: rgba(231, 76, 60, 1.0);
+    }
+
+    li.dropdown {
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    #responstable {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 50%;
+      margin-left: 25%;
+      margin-right: 25%;
+      margin-top: 30px;
+    }
+
+    #responstable td,
+    #responstable th {
+      border: 1px solid #ddd;
+      text-align: center;
+      padding: 8px;
+    }
+
+    #responstable tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #responstable tr:hover {
+      background-color: #ddd;
+    }
+
+    #responstable tr td:nth-child(3) {
+      border: none;
+      outline: none;
+      background-color: #E9EBEE;
+    }
+
+    .changeGrade {
+      border: none;
+      outline: none;
+      padding: 10px;
+      background-color: rgba(44, 62, 80, 1.0);
+      color: white;
+    }
+
+    .changeGrade:hover {
+      cursor: pointer;
+    }
+
+    #responstable th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: rgba(211, 84, 0, 1.0);
+      color: white;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      background-color: transparent;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body onload=processUser()>
+
+  <ul>
+    <li><a href="Instructor.html">MainMenu</a></li>
+    <li class="dropdown">
+      <a href="javascript:void(0)" class="dropbtn">Dropdown</a>
+      <div class="dropdown-content">
+        <a href="releaseGrade.html">Release Grade</a>
+        <a href="makeExam.html">Make an Exam</a>
+        <a href="addQuestion.html">Add Question</a>
+      </div>
+    </li>
+    <li style="float:right"><a href="Login.html" class="logoutButton">Logout</a></li>
+  </ul>
+
+  <div id="selection">
+    <form>
+      <table id="responstable">
+      </table>
+    </form>
+  </div>
+
+</body>
+<script type="text/javascript">
+  var exam_id;
+  var exam_name;
+
+  function processUser() {
+
+    var parameters = location.search.substring(1).split("&");
+
+    var temp = parameters[0].split("=");
+    exam_id = unescape(temp[1]);
+    temp = parameters[1].split("=");
+    exam_name = unescape(temp[1]);
+    displayUserGrades();
+  }
+
+  function displayUserGrades() {
+
+    var tableOutputString = "";
+    var header = ["User Name", "Grades"];
+
+    //	Generating the column names and storing in the string.
+    tableOutputString = tableOutputString + '<thead> <tr>';
+
+    for (var index = 0; index < header.length; index++) {
+      //console.log(' name=' + key + ' value=' + response[1][key]);
+      tableOutputString = tableOutputString + '<th style = "text-align: center">' + header[index] + '</th>';
+    }
+
+    tableOutputString = tableOutputString + '</tr> </thead>';
+    tableOutputString = tableOutputString + '<tbody>';
+    //	creating the body part of the table
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText); //  //  /////////
+        var noOfExams = Object.keys(response).length;
+
+        for (var i = 0; i < noOfExams; i++) {
+          tableOutputString = tableOutputString + '<tr>';
+          tableOutputString = tableOutputString + '<td>' + "<a href=displayExamForUser.html?exam_id=" + exam_id + "&user_name=" + response[i]["username"] + ">" + response[i]["username"] + "</a>" + '</td>';
+          tableOutputString = tableOutputString + '<td><input type=number onkeyup="return keyispressed(event)" class=newGrade disabled' + " id=" + response[i]["username"] + " placeholder=" + response[i]["grade"] + '></td>';
+          tableOutputString = tableOutputString + '<td><button type=button class=changeGrade ' + "onclick=changeGrade(" + response[i]["username"] + ")>" + "Change Grade" + "</button>" + '</td>';
+
+          tableOutputString = tableOutputString + '</tr>'
+        }
+
+        document.getElementById("responstable").innerHTML = "</tbody>" + tableOutputString;
+      }
+    };
+    xhttp.open("GET", "getAllUsersFromExamId.php?exam_id=" + exam_id, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
+
+  }
+
+  function changeGrade(userName) {
+    document.getElementById(userName.id).disabled = false;
+  }
+
+  function keyispressed(e) {
+    if (e.keyCode == 13) {
+      var username = event.target.id;
+      var newGrade = document.getElementById(event.target.id).value;
+      document.getElementById(username).disabled = true;
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+
+          //alert(this.responseText);
+        }
+      };
+
+      xhttp.open("POST", "sendNewGrade.php?user=" + username + "&grade=" + newGrade + "&exam_id=" + exam_id, true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send();
+
+    }
+  }
+</script>
+
+</html>
